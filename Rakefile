@@ -2,7 +2,7 @@
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require 'rubygems'
 require 'bundler/setup'
-require 'awesome_nested_set/version'
+require 'rational_nested_set/version'
 
 task :default => :spec
 
@@ -15,19 +15,19 @@ task :spec do
 end
 
 task :build do
-  system "gem build awesome_nested_set.gemspec"
+  system "gem build rational_nested_set.gemspec"
 end
 
 task :release => :build do
-  system "gem push awesome_nested_set-#{AwesomeNestedSet::VERSION}.gem"
+  system "gem push rational_nested_set-#{RationalNestedSet::VERSION}.gem"
 end
 
 require 'rdoc/task'
-desc 'Generate documentation for the awesome_nested_set plugin.'
+desc 'Generate documentation for the rational_nested_set plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'AwesomeNestedSet'
-  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.title    = 'RationalNestedSet'
+  rdoc.options  << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README.md')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

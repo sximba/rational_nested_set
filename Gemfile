@@ -13,7 +13,6 @@ end
 platforms :ruby do
   gem 'sqlite3'
   gem 'mysql2', (MYSQL2_VERSION if defined? MYSQL2_VERSION)
-  gem 'pg'
 end
 
 # Add Oracle Adapters

@@ -18,7 +18,6 @@ end
 platforms :ruby do
   gem "sqlite3"
   gem "mysql2", nil
-  gem "pg"
 end
 
 gemspec :path => "../"

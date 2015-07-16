@@ -18,7 +18,7 @@ require 'combustion/database'
 Combustion::Database.create_database(ActiveRecord::Base.configurations[ENV["DB"]])
 load(File.join(plugin_test_dir, "db", "schema.rb"))
 
-require 'awesome_nested_set'
+require 'rational_nested_set'
 require 'support/models'
 
 begin
