@@ -7,24 +7,24 @@ module CollectiveIdea #:nodoc:
 
       # This acts provides Rational Nested Set functionality. Nested Set is a smart way to implement
       # an _ordered_ tree, with the added feature that you can select the children and all of their
-      # descendants with a single query. The drawback is that insertion or move need some complex
-      # sql queries. But everything is done here by this module!
+      # descendants with a single query. Furthermore, the use of rational numbers to mark tree nodes means
+      # that insertion or moving of nodes doesn't require an update of the entire tree.
       #
       # This implementation utilizes rational numbers to mark tree nodes. This improves the efficiency
       # of insertions and moves. For these operations it does not need to update the entire tree-set
-      # but only the descendents of the concerned tree node, if any. The drawback is that it is no longer
+      # but only the descendants of the concerned tree node, if any. The drawback is that it is no longer
       # simple to recognize leaf nodes, to test if a node is a leaf a query against the whole tree-set is
       # necessary. This module overcomes this by using an extra column to mark nodes that are leaves, and
-      # adds an exta step during insertion and deletion to ensure the nodes are updated accordingly.
+      # adds an extra step during insertion and deletion to ensure the nodes are updated accordingly.
       # It is also necessary to add another sorting column as the total order is established from values
       # from 2 columns.
       #
-      # Nested sets are appropriate each time you want either an orderd tree (menus,
+      # Nested sets are appropriate each time you want either an ordered tree (menus,
       # commercial categories) or an efficient way of querying big trees (threaded posts).
       #
       # == API
       #
-      # Methods names are aligned with acts_as_tree as much as possible to make replacment from one
+      # Methods names are aligned with acts_as_tree as much as possible to make replacement from one
       # by another easier.
       #
       #   item.children.create(:name => "child1")
@@ -40,7 +40,7 @@ module CollectiveIdea #:nodoc:
       # * +:sdenv_column+ - column name for sibling denominator data, default "sdenv"
       # * +:depth_column+ - column name for the depth data, default "depth"
       # * +:total_order_column+ - column name for the ordering data (numv/denv), default "total_order"
-      # * +:is_leaf_column+ - column name for leaf indicaton data, default "is_leaf"
+      # * +:is_leaf_column+ - column name for leaf indication data, default "is_leaf"
       # * +:scope+ - restricts what is to be considered a list. Given a symbol, it'll attach "_id"
       #   (if it hasn't been already) and use that as the foreign key restriction. You
       #   can also pass an array to scope by multiple attributes.
