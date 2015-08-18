@@ -1,8 +1,10 @@
 scope1:
   id: 1
   body: Top Level
-  lft: 1
-  rgt: 10
+  numv: 1
+  denv: 1
+  snumv: 2
+  sdenv: 1
   notable_id: 1
   notable_type: Category
   user_id: 1
@@ -10,8 +12,10 @@ child_1:
   id: 2
   body: Child 1
   parent_id: 1
-  lft: 2
-  rgt: 3
+  numv: 3
+  denv: 2
+  snumv: 5
+  sdenv: 3
   notable_id: 1
   notable_type: Category
   user_id: 1
@@ -19,8 +23,10 @@ child_2:
   id: 3
   body: Child 2
   parent_id: 1
-  lft: 4
-  rgt: 7
+  numv: 5
+  denv: 3
+  snumv: 7
+  sdenv: 4
   notable_id: 1
   notable_type: Category
   user_id: 1
@@ -28,15 +34,19 @@ child_3:
   id: 4
   body: Child 3
   parent_id: 1
-  lft: 8
-  rgt: 9
+  numv: 7
+  denv: 4
+  snumv: 9
+  sdenv: 5
   notable_id: 1
   notable_type: Category
   user_id: 1
 scope2:
   id: 5
   body: Top Level 2
-  lft: 1
-  rgt: 2
+  numv: 2
+  denv: 1
+  snumv: 3
+  sdenv: 1
   notable_id: 1
   notable_type: Departments

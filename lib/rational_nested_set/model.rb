@@ -51,8 +51,8 @@ module CollectiveIdea #:nodoc:
           end
 
           # Iterates over tree elements and determines the current level in the tree.
-          # Only accepts default ordering, odering by an other column than lft
-          # does not work. This method is much more efficent than calling level
+          # Only accepts default ordering, ordering by an other column than lft
+          # does not work. This method is much more efficient than calling level
           # because it doesn't require any additional database queries.
           #
           # Example:
@@ -130,7 +130,7 @@ module CollectiveIdea #:nodoc:
 
         # Returns true if this is a root node.
         def root?
-          denv.eq(1)
+          denv == 1
         end
 
         # Returns true is this is a child node

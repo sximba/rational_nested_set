@@ -25,9 +25,14 @@ end
 
 class RenamedColumns < ActiveRecord::Base
   acts_as_nested_set :parent_column => 'mother_id',
-                     :left_column => 'red',
-                     :right_column => 'black',
-                     :depth_column => 'pitch'
+                     :primary_column => 'uuid',
+                     :numv_column => 'orange',
+                     :denv_column => 'yellow',
+                     :snumv_column => 'green',
+                     :sdenv_column => 'blue',
+                     :depth_column => 'indigo',
+                     :total_order_column => 'violet',
+                     :is_leaf_column => 'purple'                  
 end
 
 class Category < ActiveRecord::Base

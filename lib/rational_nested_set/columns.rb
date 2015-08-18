@@ -115,8 +115,16 @@ module CollectiveIdea #:nodoc:
           "#{quoted_table_name}.#{quoted_sdenv_column_name}"
         end
 
+        def quoated_depth_column_full_name
+          "#{quoted_table_name}.#{quoted_depth_column_name}"
+        end
+
         def quoted_parent_column_full_name
           "#{quoted_table_name}.#{quoted_parent_column_name}"
+        end
+
+        def quoted_total_order_column_full_name
+          "#{quoted_table_name}.#{quoted_total_order_column_name}"
         end
 
         def quoted_is_leaf_column_full_name

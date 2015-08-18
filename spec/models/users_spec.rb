@@ -6,6 +6,7 @@ describe "User", :type => :model do
   end
 
   describe "hierarchical structure" do
+=begin
     it "roots_class_method" do
       found_by_us = User.where(:parent_uuid => nil).to_a
       found_by_roots = User.roots.to_a
@@ -847,5 +848,6 @@ describe "User", :type => :model do
         expect(leaf.destroy).to eq(leaf)
       end
     end
+=end
   end
 end

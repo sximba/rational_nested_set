@@ -18,8 +18,8 @@ module CollectiveIdea #:nodoc:
         attr_reader :model, :parent
         attr_accessor :scope
 
-        delegate :parent_column_name, :primary_column_name, :primary_key, :left_column_name, :right_column_name, :arel_table,
-          :quoted_table_name, :quoted_parent_column_full_name, :quoted_left_column_full_name, :quoted_right_column_full_name, :quoted_left_column_name, :quoted_right_column_name, :quoted_primary_column_name,
+        delegate :parent_column_name, :primary_column_name, :primary_key, :numv_column_name, :denv_column_name, :snumv_column_name, :sdenv_column_name, :depth_column_name, :total_order_column_name, :is_leaf_column_name, :arel_table,
+          :quoted_table_name, :quoted_parent_column_full_name, :quoted_numv_column_full_name, :quoted_denv_column_full_name, :quoted_snumv_column_full_name, :quoted_sdenv_column_full_name, :quoted_total_order_column_full_name, :quoted_is_leaf_column_full_name, :quoted_primary_column_name,
         :to => :model
 
         def query

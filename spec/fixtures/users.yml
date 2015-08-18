@@ -2,39 +2,51 @@ top_level:
   id: 1
   uuid: abcd
   name: Top Level
-  lft: 1
-  rgt: 10
+  numv: 1
+  denv: 1
+  snumv: 2
+  sdenv: 1
 child_1:
   id: 2
   uuid: efgh
   name: Child 1
   parent_uuid: abcd
-  lft: 2
-  rgt: 3
+  numv: 3
+  denv: 2
+  snumv: 5
+  sdenv: 3
 child_2:
   id: 3
   uuid: ijkh
   name: Child 2
   parent_uuid: abcd
-  lft: 4
-  rgt: 7
+  numv: 5
+  denv: 3
+  snumv: 7
+  sdenv: 4
 child_2_1:
   id: 4
   uuid: lmno
   name: Child 2.1
   parent_uuid: ijkh
-  lft: 5
-  rgt: 6
+  numv: 12
+  denv: 7
+  snumv: 19
+  sdenv: 11
 child_3:
   id: 5
   uuid: pqrs
   name: Child 3
   parent_uuid: abcd
-  lft: 8
-  rgt: 9
+  numv: 7
+  denv: 4
+  snumv: 9
+  sdenv: 5
 top_level_2:
   id: 6
   uuid: tuvw
   name: Top Level 2
-  lft: 11
-  rgt: 12
+  numv: 2
+  denv: 1
+  snumv: 3
+  sdenv: 1
