@@ -1,5 +1,6 @@
 require 'rational_nested_set/rational_nested_set'
 require 'active_record'
+
 ActiveRecord::Base.send :extend, CollectiveIdea::Acts::NestedSet
 
 if defined?(ActionView)

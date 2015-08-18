@@ -10,8 +10,8 @@ module CollectiveIdea #:nodoc:
             self != target && # Can't target self
               same_scope?(target) && # can't be in different scopes
               # detect impossible move
-              within_bounds?(target.left, target.left) &&
-              within_bounds?(target.right, target.right)
+              within_bounds?(target.total_order, target.total_order) &&
+              within_bounds?(target.sibling_order, target.sibling_order)
           end
 
           # Shorthand method for finding the left sibling and moving to the left of it.
@@ -127,7 +127,7 @@ module CollectiveIdea #:nodoc:
           end
 
           def out_of_bounds?(left_bound, right_bound)
-            left <= left_bound && right >= right_bound
+            total_order <= left_bound && sibling_order >= right_bound
           end
 
           def prevent_unpersisted_move

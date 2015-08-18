@@ -8,6 +8,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
   end
@@ -20,6 +21,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
     t.column :organization_id, :integer
@@ -37,6 +39,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
     t.column :notable_id, :integer
@@ -64,6 +67,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
     t.column :children_count, :integer
@@ -77,6 +81,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
   end
@@ -89,6 +94,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
   end
@@ -101,6 +107,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
     t.column :position, :integer
@@ -114,6 +121,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :is_leaf, :boolean
   end
 
@@ -126,6 +134,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :is_leaf, :boolean
   end
 
@@ -138,6 +147,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :snumv, :integer
     t.column :sdenv, :integer
     t.column :total_order, :float
+    t.column :sibling_order, :float
     t.column :depth, :integer
     t.column :is_leaf, :boolean
     t.column :organization_id, :integer

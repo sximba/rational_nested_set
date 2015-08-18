@@ -12,8 +12,8 @@ module CollectiveIdea
           # Returns the collection of all parents and self
           def self_and_ancestors
             nested_set_scope.
-              where(arel_table[left_column_name].lteq(left)).
-              where(arel_table[right_column_name].gteq(right))
+              where(arel_table[total_order_column_name].lt(total_order).
+                and(arel_table[sibling_order_column_name].gteq(total_order)).or(arel_table[primary_column_name].eq(self.id)))
           end
 
           # Returns the collection of all children of the parent, except self
@@ -28,9 +28,7 @@ module CollectiveIdea
 
           # Returns a set of all of its nested children which do not have children
           def leaves
-            descendants.where(
-              "#{quoted_right_column_full_name} - #{quoted_left_column_full_name} = 1"
-            )
+            descendants.where(arel_table[is_leaf_column_name].eq(true))
           end
 
           # Returns the level of this object in the tree
@@ -47,7 +45,8 @@ module CollectiveIdea
           # Returns a collection including itself and all of its nested children
           def self_and_descendants
             # using _left_ for both sides here lets us benefit from an index on that column if one exists
-            nested_set_scope.right_of(left).left_of(right)
+            nested_set_scope.where(arel_table[total_order_column_name].gteq(total_order)).
+              where(arel_table[total_order_column_name].lt(sibling_order))
           end
 
           def is_descendant_of?(other)
@@ -75,12 +74,14 @@ module CollectiveIdea
 
           # Find the first sibling to the left
           def left_sibling
-            siblings.left_of(left).last
+            siblings.where(arel_table[snumv_column_name].eq(numv)).
+              where(arel_table[sdenv_column_name].eq(denv)).first
           end
 
           # Find the first sibling to the right
           def right_sibling
-            siblings.right_of(left).first
+            siblings.where(arel_table[numv_column_name].eq(snumv)).
+              where(arel_table[denv_column_name].eq(sdenv)).first
           end
 
           def root
@@ -111,7 +112,7 @@ module CollectiveIdea
           end
 
           def within_node?(node, within)
-            node.left < within.left && within.left < node.right
+            node.total_order < within.total_order && within.total_order < node.sibling_order
           end
 
         end

@@ -63,7 +63,7 @@ module CollectiveIdea #:nodoc:
           end
 
           def leaves
-            nested_set_scope.where "is_leaf = 1"
+            nested_set_scope.where(arel_table[is_leaf_column_name].eq(true))
           end
 
           def left_of(node)
@@ -200,7 +200,7 @@ module CollectiveIdea #:nodoc:
             return 0 if right_most_node.nil?
 
             right_most_node.lock!
-            right_most_node[right_column_name] || 0
+            right_most_node[total_order_column_name] || 0
           end
         end
 
@@ -248,7 +248,7 @@ module CollectiveIdea #:nodoc:
         # reload left, right, and parent
         def reload_nested_set
           reload(
-            :select => "#{quoted_left_column_full_name}, #{quoted_right_column_full_name}, #{quoted_parent_column_full_name}",
+            :select => "#{quoted_numv_column_full_name}, #{quoted_denv_column_full_name}, #{quoted_snumv_column_full_name}, #{quoted_sdenv_column_full_name}, #{quoted_parent_column_full_name}",
             :lock => true
           )
         end

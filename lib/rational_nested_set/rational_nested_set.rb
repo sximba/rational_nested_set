@@ -40,6 +40,7 @@ module CollectiveIdea #:nodoc:
       # * +:sdenv_column+ - column name for sibling denominator data, default "sdenv"
       # * +:depth_column+ - column name for the depth data, default "depth"
       # * +:total_order_column+ - column name for the ordering data (numv/denv), default "total_order"
+      # * +:sibling_order_column+ - column name for the ordering data (snumv/sdenv), default "sibling_order"
       # * +:is_leaf_column+ - column name for leaf indication data, default "is_leaf"
       # * +:scope+ - restricts what is to be considered a list. Given a symbol, it'll attach "_id"
       #   (if it hasn't been already) and use that as the foreign key restriction. You
@@ -124,6 +125,7 @@ module CollectiveIdea #:nodoc:
           :sdenv_column => 'sdenv',
           :depth_column => 'depth',
           :total_order_column => 'total_order',
+          :sibling_order_column => 'sibling_order',
           :is_leaf_column => 'is_leaf',
           :dependent => :delete_all, # or :destroy
           :polymorphic => false,
@@ -145,7 +147,7 @@ module CollectiveIdea #:nodoc:
 
       def acts_as_nested_set_prevent_assignment_to_reserved_columns!
         # no assignment to structure fields
-        [numv_column_name, denv_column_name, snumv_column_name, sdenv_column_name, depth_column_name, total_order_column_name, is_leaf_column_name].each do |column|
+        [numv_column_name, denv_column_name, snumv_column_name, sdenv_column_name, depth_column_name, total_order_column_name, sibling_order_column_name, is_leaf_column_name].each do |column|
           module_eval <<-"end_eval", __FILE__, __LINE__
             def #{column}=(x)
               raise ActiveRecord::ActiveRecordError, "Unauthorized assignment to #{column}: it's an internal field handled by acts_as_nested_set code, use move_to_* methods instead."

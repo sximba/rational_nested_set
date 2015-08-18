@@ -27,6 +27,10 @@ module CollectiveIdea #:nodoc:
           acts_as_nested_set_options[:total_order_column]
         end
 
+        def sibling_order_column_name
+          acts_as_nested_set_options[:sibling_order_column]
+        end
+
         def is_leaf_column_name
           acts_as_nested_set_options[:is_leaf_column]
         end
@@ -79,6 +83,10 @@ module CollectiveIdea #:nodoc:
           ActiveRecord::Base.connection.quote_column_name(total_order_column_name)
         end
 
+        def quoted_sibling_order_column_name
+          ActiveRecord::Base.connection.quote_column_name(sibling_order_column_name)
+        end
+
         def quoted_is_leaf_column_name
           ActiveRecord::Base.connection.quote_column_name(is_leaf_column_name)
         end
@@ -125,6 +133,10 @@ module CollectiveIdea #:nodoc:
 
         def quoted_total_order_column_full_name
           "#{quoted_table_name}.#{quoted_total_order_column_name}"
+        end
+
+        def quoted_sibling_order_column_full_name
+          "#{quoted_table_name}.#{quoted_sibling_order_column_name}"
         end
 
         def quoted_is_leaf_column_full_name

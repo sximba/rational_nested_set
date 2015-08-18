@@ -155,6 +155,12 @@ describe "RationalNestedSet" do
       expect(Default.new.quoted_total_order_column_name).to eq(quoted)
     end
 
+    it "quoted_sibling_order_column_name" do
+      quoted = Default.connection.quote_column_name('sibling_order')
+      expect(Default.quoted_sibling_order_column_name).to eq(quoted)
+      expect(Default.new.quoted_sibling_order_column_name).to eq(quoted)
+    end
+
     it "quoted_order_column_name" do
       quoted = Default.connection.quote_column_name('total_order')
       expect(Default.quoted_order_column_name).to eq(quoted)
@@ -205,6 +211,12 @@ describe "RationalNestedSet" do
       }.to raise_exception(ActiveRecord::ActiveRecordError)
     end
 
+    it "sibling_order_column_protected_from_assignment" do
+      expect {
+        Category.new.sibling_order = 1
+      }.to raise_exception(ActiveRecord::ActiveRecordError)
+    end
+
     it "is_leaf_column_protected_from_assignment" do
       expect {
         Category.new.is_leaf = false
@@ -252,7 +264,7 @@ describe "RationalNestedSet" do
     end
 
     it "leaves_class_method" do
-      expect(Category.where("#{Category.is_leaf_column_name} = 1").to_a).to eq(Category.leaves.to_a)
+      expect(Category.where("#{Category.is_leaf_column_name} = ?", true).to_a).to eq(Category.leaves.to_a)
       expect(Category.leaves.count).to eq(4)
       expect(Category.leaves).to include(categories(:child_1))
       expect(Category.leaves).to include(categories(:child_2_1))
@@ -308,7 +320,7 @@ describe "RationalNestedSet" do
       expect(categories(:top_level).leaves).to eq(leaves)
     end
   end
-=begin
+
   describe "level" do
     it "returns the correct level" do
       expect(categories(:top_level).level).to eq(0)
@@ -1335,5 +1347,4 @@ describe "RationalNestedSet" do
       end
     end
   end
-=end
 end
