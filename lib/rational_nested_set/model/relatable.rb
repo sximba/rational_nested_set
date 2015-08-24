@@ -3,7 +3,6 @@ module CollectiveIdea
     module NestedSet
       module Model
         module Relatable
-
           # Returns an collection of all parents
           def ancestors
             without_self self_and_ancestors
@@ -12,8 +11,8 @@ module CollectiveIdea
           # Returns the collection of all parents and self
           def self_and_ancestors
             nested_set_scope.
-              where(arel_table[total_order_column_name].lt(total_order).
-                and(arel_table[sibling_order_column_name].gteq(total_order)).or(arel_table[primary_column_name].eq(self.id)))
+            where((arel_table[total_order_column_name].lt(total_order).
+            and(arel_table[sibling_order_column_name].gteq(total_order))).or(arel_table[primary_column_name].eq(self.primary_id)))
           end
 
           # Returns the collection of all children of the parent, except self
@@ -45,8 +44,9 @@ module CollectiveIdea
           # Returns a collection including itself and all of its nested children
           def self_and_descendants
             # using _left_ for both sides here lets us benefit from an index on that column if one exists
-            nested_set_scope.where(arel_table[total_order_column_name].gteq(total_order)).
-              where(arel_table[total_order_column_name].lt(sibling_order))
+            nested_set_scope.where(
+              arel_table[primary_column_name].eq(self.primary_id).or(arel_table[total_order_column_name].gteq(total_order)).
+              and(arel_table[total_order_column_name].lt(sibling_order)))
           end
 
           def is_descendant_of?(other)
@@ -75,13 +75,13 @@ module CollectiveIdea
           # Find the first sibling to the left
           def left_sibling
             siblings.where(arel_table[snumv_column_name].eq(numv)).
-              where(arel_table[sdenv_column_name].eq(denv)).first
+            where(arel_table[sdenv_column_name].eq(denv)).first
           end
 
           # Find the first sibling to the right
           def right_sibling
             siblings.where(arel_table[numv_column_name].eq(snumv)).
-              where(arel_table[denv_column_name].eq(sdenv)).first
+            where(arel_table[denv_column_name].eq(sdenv)).first
           end
 
           def root

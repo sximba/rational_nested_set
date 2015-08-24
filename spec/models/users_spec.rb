@@ -6,7 +6,7 @@ describe "User", :type => :model do
   end
 
   describe "hierarchical structure" do
-=begin
+
     it "roots_class_method" do
       found_by_us = User.where(:parent_uuid => nil).to_a
       found_by_roots = User.roots.to_a
@@ -35,7 +35,7 @@ describe "User", :type => :model do
     end
 
     it "leaves_class_method" do
-      expect(User.where("#{User.right_column_name} - #{User.left_column_name} = 1").to_a).to eq(User.leaves.to_a)
+      expect(User.where("#{User.is_leaf_column_name} = ?", true).to_a).to eq(User.leaves.to_a)
       expect(User.leaves.count).to eq(4)
       expect(User.leaves).to include(users(:child_1))
       expect(User.leaves).to include(users(:child_2_1))
@@ -67,7 +67,7 @@ describe "User", :type => :model do
     it "ancestors" do
       child = users(:child_2_1)
       ancestors = [users(:top_level), users(:child_2)]
-      expect(ancestors).to eq(child.ancestors)
+      expect(child.ancestors).to eq(ancestors)
     end
 
     it "self_and_siblings" do
@@ -183,9 +183,9 @@ describe "User", :type => :model do
     patent.move_to_child_of(us)
     lawyers.reload
 
-    expect(lawyers.children.size).to eq(1)
-    expect(us.children.size).to eq(1)
-    expect(lawyers.descendants.size).to eq(2)
+    expect(1).to eq(lawyers.children.size)
+    expect(1).to eq(us.children.size)
+    expect(2).to eq(lawyers.descendants.size)
   end
 
   it "self_and_descendants" do
@@ -394,47 +394,48 @@ describe "User", :type => :model do
   end
 
   it "subtree_move_to_child_of" do
-    expect(users(:child_2).left).to eq(4)
-    expect(users(:child_2).right).to eq(7)
+    expect(users(:child_2).total_order).to eq(1.6666666666666667)
+    expect(users(:child_2).sibling_order).to eq(1.75)
 
-    expect(users(:child_1).left).to eq(2)
-    expect(users(:child_1).right).to eq(3)
+    expect(users(:child_1).total_order).to eq(1.5)
+    expect(users(:child_1).sibling_order).to eq(1.6666666666666667)
 
     users(:child_2).move_to_child_of(users(:child_1))
     expect(User.valid?).to be_truthy
     expect(users(:child_1).uuid).to eq(users(:child_2).parent_uuid)
 
-    expect(users(:child_2).left).to eq(3)
-    expect(users(:child_2).right).to eq(6)
-    expect(users(:child_1).left).to eq(2)
-    expect(users(:child_1).right).to eq(7)
+    expect(users(:child_2).total_order).to eq(1.6)
+    expect(users(:child_2).sibling_order).to eq(1.625)
+    expect(users(:child_1).total_order).to eq(1.5)
+    expect(users(:child_1).sibling_order).to eq(1.6666666666666667)
   end
 
   it "slightly_difficult_move_to_child_of" do
-    expect(users(:top_level_2).left).to eq(11)
-    expect(users(:top_level_2).right).to eq(12)
+    expect(users(:top_level_2).total_order).to eq(2.0)
+    expect(users(:top_level_2).sibling_order).to eq(3.0)
 
     # create a new top-level node and move single-node top-level tree inside it.
     new_top = User.create(:name => 'New Top')
-    expect(new_top.left).to eq(13)
-    expect(new_top.right).to eq(14)
+
+    expect(new_top.total_order).to eq(3.0)
+    expect(new_top.sibling_order).to eq(4.0)
 
     users(:top_level_2).move_to_child_of(new_top)
 
     expect(User.valid?).to be_truthy
     expect(new_top.uuid).to eq(users(:top_level_2).parent_uuid)
 
-    expect(users(:top_level_2).left).to eq(12)
-    expect(users(:top_level_2).right).to eq(13)
-    expect(new_top.left).to eq(11)
-    expect(new_top.right).to eq(14)
+    expect(users(:top_level_2).total_order).to eq(3.5)
+    expect(users(:top_level_2).sibling_order).to eq(3.6666666666666665)
+    expect(new_top.total_order).to eq(3.0)
+    expect(new_top.sibling_order).to eq(4.0)
   end
 
   it "difficult_move_to_child_of" do
-    expect(users(:top_level).left).to eq(1)
-    expect(users(:top_level).right).to eq(10)
-    expect(users(:child_2_1).left).to eq(5)
-    expect(users(:child_2_1).right).to eq(6)
+    expect(users(:top_level).total_order).to eq(1.0)
+    expect(users(:top_level).sibling_order).to eq(2.0)
+    expect(users(:child_2_1).total_order).to eq(1.7142857142857142)
+    expect(users(:child_2_1).sibling_order).to eq(1.7272727272727273)
 
     # create a new top-level node and move an entire top-level tree inside it.
     new_top = User.create(:name => 'New Top')
@@ -443,10 +444,14 @@ describe "User", :type => :model do
     expect(User.valid?).to be_truthy
     expect(new_top.uuid).to eq(users(:top_level).parent_uuid)
 
-    expect(users(:top_level).left).to eq(4)
-    expect(users(:top_level).right).to eq(13)
-    expect(users(:child_2_1).left).to eq(8)
-    expect(users(:child_2_1).right).to eq(9)
+    expect(users(:top_level).total_order).to eq(3.5)
+    expect(users(:top_level).sibling_order).to eq(3.6666666666666665)
+    expect(users(:child_2_1).num).to eq(69)
+    expect(users(:child_2_1).den).to eq(19)
+    expect(users(:child_2_1).snum).to eq(109)
+    expect(users(:child_2_1).sden).to eq(30)
+    expect(users(:child_2_1).total_order).to eq(3.6315789473684212)
+    expect(users(:child_2_1).sibling_order).to eq(3.6333333333333333)
   end
 
   #rebuild swaps the position of the 2 children when added using move_to_child twice onto same parent
@@ -519,7 +524,7 @@ describe "User", :type => :model do
     root2.save!(:validate => false)
 
     output = User.roots.last.to_text
-    User.update_all('lft = null, rgt = null')
+    User.update_all('total_order = null, sibling_order = null')
     User.rebuild!(false)
 
     expect(User.roots.last.to_text).to eq(output)
@@ -527,13 +532,13 @@ describe "User", :type => :model do
 
   it "valid_with_null_lefts" do
     expect(User.valid?).to be_truthy
-    User.update_all('lft = null')
+    User.update_all('total_order = null')
     expect(User.valid?).to be_falsey
   end
 
   it "valid_with_null_rights" do
     expect(User.valid?).to be_truthy
-    User.update_all('rgt = null')
+    User.update_all('sibling_order = null')
     expect(User.valid?).to be_falsey
   end
 
@@ -848,6 +853,5 @@ describe "User", :type => :model do
         expect(leaf.destroy).to eq(leaf)
       end
     end
-=end
   end
 end

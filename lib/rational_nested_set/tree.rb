@@ -5,7 +5,7 @@ module CollectiveIdea #:nodoc:
         attr_reader :model, :validate_nodes
         attr_accessor :indices
 
-        delegate :left_column_name, :right_column_name, :quoted_parent_column_full_name,
+        delegate :total_order_column_name, :sibling_order_column_name, :quoted_parent_column_full_name,
                  :order_for_rebuild, :scope_for_rebuild,
                  :to => :model
 

@@ -15,7 +15,7 @@ module CollectiveIdea
           end
 
           def no_duplicates_for_columns?
-            [quoted_left_column_full_name, quoted_right_column_full_name].all? do |column|
+            [quoted_total_order_column_full_name, quoted_sibling_order_column_full_name].all? do |column|
               # No duplicates
               select("#{scope_string}#{column}, COUNT(#{column}) as _count").
                 group("#{scope_string}#{column}", quoted_primary_key_column_full_name).
@@ -41,11 +41,11 @@ module CollectiveIdea
           end
 
           def each_root_valid?(roots_to_validate)
-            left = right = 0
+            total_order = sibling_order = 0
             roots_to_validate.all? do |root|
-              (root.left > left && root.right > right).tap do
-                left = root.left
-                right = root.right
+              (root.total_order > total_order && root.sibling_order > sibling_order).tap do
+                total_order = root.total_order
+                sibling_order = root.sibling_order
               end
             end
           end

@@ -31,8 +31,8 @@ module CollectiveIdea #:nodoc:
 
         private
 
-        delegate :left, :right, :left_column_name, :right_column_name,
-                 :quoted_left_column_name, :quoted_right_column_name,
+        delegate :total_order, :sibling_order, :total_order_column_name, :sibling_order_column_name,
+                 :quoted_total_order_column_name, :quoted_sibling_order_column_name,
                  :quoted_parent_column_name, :parent_column_name, :nested_set_scope_without_default_scope,
                  :primary_column_name, :quoted_primary_column_name, :primary_id,
                  :to => :instance
@@ -121,10 +121,13 @@ module CollectiveIdea #:nodoc:
 
         def target_bound
           case position
-          when :child then right(target)
-          when :left  then left(target)
-          when :right then right(target) + 1
-          when :root  then nested_set_scope_without_default_scope.pluck(right_column_name).max + 1
+          when :child then sibling_order(target)
+          when :left  then total_order(target)
+          when :right then sibling_order(target) + 1
+          when :root  then nested_set_scope_without_default_scope(:order => "#{quoted_total_order_column_full_name} desc").
+            where("#{quoted_denv_column_full_name} = ?", 1.0).
+            limit(1).
+            first.pluck(total_order_column_name).max + 1
           else raise ActiveRecord::ActiveRecordError, "Position should be :child, :left, :right or :root ('#{position}' received)."
           end
         end

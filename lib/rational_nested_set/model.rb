@@ -9,7 +9,6 @@ require 'rational_nested_set/iterator'
 module CollectiveIdea #:nodoc:
   module Acts #:nodoc:
     module NestedSet #:nodoc:
-
       module Model
         extend ActiveSupport::Concern
 
@@ -67,13 +66,13 @@ module CollectiveIdea #:nodoc:
           end
 
           def left_of(node)
-            where(arel_table[numv_column_name]/arel_table[denv_column_name])
-              .lt(node)
+            where(arel_table[numv_column_name]/arel_table[denv_column_name]).
+            lt(node)
           end
 
           def right_of(node)
-          where(arel_table[numv_column_name]/arel_table[denv_column_name])
-            .gt(node)
+            where(arel_table[numv_column_name]/arel_table[denv_column_name]).
+            gt(node)
           end
 
           def nested_set_scope(options = {})
@@ -189,19 +188,41 @@ module CollectiveIdea #:nodoc:
           nested_set_scope.column_names.map(&:to_s).include?(depth_column_name.to_s)
         end
 
-        def right_most_node
-          @right_most_node ||= nested_set_scope(
-            :order => "#{quoted_total_order_column_full_name} desc"
-          ).first
+        def evaluate_num_den(list)
+          def add_and_reciprocate(num, den, arg)
+            num = num + (arg * den)
+            [den, num]
+          end
+          num = 1
+          den = 1
+          list.reverse.each_with_index do |arg, index|
+            arg = Integer(arg)
+            if index == 0
+              num = 1
+              den = arg
+              unless index == list.length - 1
+                values = add_and_reciprocate(num, den, 1)
+                num = values[0]
+                den = values[1]
+              end
+              next
+            end
+            values = add_and_reciprocate(num, den, arg)
+            values = add_and_reciprocate(values[0], values[1], 1) unless index == list.length - 1
+            num = values[0]
+            den = values[1]
+          end
+          tmp = num
+          num = den
+          den = tmp
+          [num, den]
         end
 
-        def right_most_bound
-          @right_most_bound ||= begin
-            return 0 if right_most_node.nil?
-
-            right_most_node.lock!
-            right_most_node[total_order_column_name] || 0
-          end
+        def right_most_node
+          @right_most_node ||= nested_set_scope(:order => "#{quoted_total_order_column_full_name} desc").
+            where("#{quoted_denv_column_full_name} = ?", 1.0).
+            limit(1).
+            first
         end
 
         def set_depth!
@@ -229,7 +250,7 @@ module CollectiveIdea #:nodoc:
 
         def update_depth(depth)
           nested_set_scope.primary_key_scope(primary_id).
-              update_all(["#{quoted_depth_column_name} = ?", depth])
+          update_all(["#{quoted_depth_column_name} = ?", depth])
           self[depth_column_name] = depth
         end
 
@@ -240,16 +261,46 @@ module CollectiveIdea #:nodoc:
           end
         end
 
+        def num_and_den_of_nth_child(node, n)
+          [
+            node[num_column_name] + (n * node[snum_column_name]),
+            node[den_column_name] + (n * node[sden_column_name])
+          ]
+        end
+
+        def snum_and_sden_of_nth_child(node, n)
+          [
+            node[num_column_name] + ((n + 1) * node[num_column_name]),
+            node[sden_column_name] + ((n + 1) * node[sden_column_name]),
+          ]
+        end
+
         def set_default_numv_and_denv
-          self[numv_column_name] = right_most_bound + 1
-          self[denv_column_name] = 1
+          rmn = right_most_node
+          if (rmn.nil?)
+            self[numv_column_name] = 1 if self[numv_column_name].nil?
+            self[denv_column_name] = 1 if self[denv_column_name].nil?
+            self[snumv_column_name] = 2 if self[snumv_column_name].nil?
+            self[sdenv_column_name] = 1 
+            self[depth_column_name] = 0
+            self[total_order_column_name] = 1
+            self[sibling_order_column_name] = 2
+          else
+            self[numv_column_name] = rmn.snumv
+            self[denv_column_name] = 1
+            self[snumv_column_name] = rmn.snumv + 1
+            self[sdenv_column_name] = 1
+            self[depth_column_name] = 0
+            self[total_order_column_name] = rmn.snumv
+            self[sibling_order_column_name] = rmn.snumv + 1
+          end
         end
 
         # reload left, right, and parent
         def reload_nested_set
           reload(
-            :select => "#{quoted_numv_column_full_name}, #{quoted_denv_column_full_name}, #{quoted_snumv_column_full_name}, #{quoted_sdenv_column_full_name}, #{quoted_parent_column_full_name}",
-            :lock => true
+          :select => "#{quoted_numv_column_full_name}, #{quoted_denv_column_full_name}, #{quoted_snumv_column_full_name}, #{quoted_sdenv_column_full_name}, #{quoted_parent_column_full_name}",
+          :lock => true
           )
         end
 

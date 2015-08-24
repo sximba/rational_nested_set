@@ -1184,17 +1184,17 @@ describe "RationalNestedSet" do
   end
 
   describe 'creating roots with a default scope ordering' do
-    it "assigns rgt and lft correctly" do
+    it "assigns total_order and sibling_order correctly" do
       alpha = Order.create(:name => 'Alpha')
       gamma = Order.create(:name => 'Gamma')
       omega = Order.create(:name => 'Omega')
 
-      expect(alpha.lft).to eq(1)
-      expect(alpha.rgt).to eq(2)
-      expect(gamma.lft).to eq(3)
-      expect(gamma.rgt).to eq(4)
-      expect(omega.lft).to eq(5)
-      expect(omega.rgt).to eq(6)
+      expect(alpha.total_order).to eq(1)
+      expect(alpha.sibling_order).to eq(2)
+      expect(gamma.total_order).to eq(2)
+      expect(gamma.sibling_order).to eq(3)
+      expect(omega.total_order).to eq(3)
+      expect(omega.sibling_order).to eq(4)
     end
   end
 
@@ -1248,7 +1248,7 @@ describe "RationalNestedSet" do
 
   describe 'specifying custom sort column' do
     it "should sort by the default sort column" do
-      expect(Category.order_column).to eq('lft')
+      expect(Category.order_column).to eq('total_order')
     end
 
     it "should sort by custom sort column" do
