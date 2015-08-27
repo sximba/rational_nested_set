@@ -127,6 +127,16 @@ module CollectiveIdea #:nodoc:
           target[sdenv_column_name]
         end
 
+        # returns the total_order column
+        def total_order(target = self)
+          target[total_order_column_name]
+        end
+
+        # returns the sibling_order column
+        def sibling_order(target = self)
+          target[sibling_order_column_name]
+        end
+
         # Returns true if this is a root node.
         def root?
           denv == 1
@@ -220,9 +230,9 @@ module CollectiveIdea #:nodoc:
 
         def right_most_node
           @right_most_node ||= nested_set_scope(:order => "#{quoted_total_order_column_full_name} desc").
-            where("#{quoted_denv_column_full_name} = ?", 1.0).
-            limit(1).
-            first
+          where("#{quoted_denv_column_full_name} = ?", 1.0).
+          limit(1).
+          first
         end
 
         def set_depth!
@@ -281,7 +291,7 @@ module CollectiveIdea #:nodoc:
             self[numv_column_name] = 1 if self[numv_column_name].nil?
             self[denv_column_name] = 1 if self[denv_column_name].nil?
             self[snumv_column_name] = 2 if self[snumv_column_name].nil?
-            self[sdenv_column_name] = 1 
+            self[sdenv_column_name] = 1
             self[depth_column_name] = 0
             self[total_order_column_name] = 1
             self[sibling_order_column_name] = 2
