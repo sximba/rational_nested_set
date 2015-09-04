@@ -18,8 +18,8 @@ module CollectiveIdea #:nodoc:
         attr_reader :model, :parent
         attr_accessor :scope
 
-        delegate :parent_column_name, :primary_column_name, :primary_key, :numv_column_name, :denv_column_name, :snumv_column_name, :sdenv_column_name, :depth_column_name, :total_order_column_name, :sibling_order_column_name, :is_leaf_column_name, :arel_table,
-          :quoted_table_name, :quoted_parent_column_full_name, :quoted_numv_column_full_name, :quoted_denv_column_full_name, :quoted_snumv_column_full_name, :quoted_sdenv_column_full_name, :quoted_total_order_column_full_name, :quoted_silbing_order_column_name, :quoted_is_leaf_column_full_name, :quoted_primary_column_name,
+        delegate :parent_column_name, :primary_column_name, :primary_key, :numv_column_name, :denv_column_name, :snumv_column_name, :sdenv_column_name, :depth_column_name, :total_order_column_name, :is_leaf_column_name, :arel_table,
+          :quoted_table_name, :quoted_parent_column_full_name, :quoted_numv_column_full_name, :quoted_denv_column_full_name, :quoted_snumv_column_full_name, :quoted_sdenv_column_full_name, :quoted_total_order_column_full_name, :quoted_is_leaf_column_full_name, :quoted_primary_column_name,
         :to => :model
 
         def query
@@ -35,7 +35,6 @@ module CollectiveIdea #:nodoc:
         def filter_scope
           self.scope = scope.where(
                                    bound_is_null(total_order_column_name).
-                                   or(bound_is_null(sibling_order_column_name)).
                                    or(left_bound_greater_than_right).
                                    or(parent_not_null.and(bounds_outside_parent))
                                    )
@@ -43,10 +42,6 @@ module CollectiveIdea #:nodoc:
 
         def bound_is_null(column_name)
           arel_table[column_name].eq(nil)
-        end
-
-        def left_bound_greater_than_right
-          arel_table[total_order_column_name].gteq(arel_table[sibling_order_column_name])
         end
 
         def parent_not_null

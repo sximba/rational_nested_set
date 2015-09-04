@@ -395,30 +395,24 @@ describe "User", :type => :model do
 
   it "subtree_move_to_child_of" do
     expect(users(:child_2).total_order).to eq(1.6666666666666667)
-    expect(users(:child_2).sibling_order).to eq(1.75)
 
     expect(users(:child_1).total_order).to eq(1.5)
-    expect(users(:child_1).sibling_order).to eq(1.6666666666666667)
 
     users(:child_2).move_to_child_of(users(:child_1))
     expect(User.valid?).to be_truthy
     expect(users(:child_1).uuid).to eq(users(:child_2).parent_uuid)
 
     expect(users(:child_2).total_order).to eq(1.6)
-    expect(users(:child_2).sibling_order).to eq(1.625)
     expect(users(:child_1).total_order).to eq(1.5)
-    expect(users(:child_1).sibling_order).to eq(1.6666666666666667)
   end
 
   it "slightly_difficult_move_to_child_of" do
     expect(users(:top_level_2).total_order).to eq(2.0)
-    expect(users(:top_level_2).sibling_order).to eq(3.0)
 
     # create a new top-level node and move single-node top-level tree inside it.
     new_top = User.create(:name => 'New Top')
 
     expect(new_top.total_order).to eq(3.0)
-    expect(new_top.sibling_order).to eq(4.0)
 
     users(:top_level_2).move_to_child_of(new_top)
 
@@ -426,16 +420,12 @@ describe "User", :type => :model do
     expect(new_top.uuid).to eq(users(:top_level_2).parent_uuid)
 
     expect(users(:top_level_2).total_order).to eq(3.5)
-    expect(users(:top_level_2).sibling_order).to eq(3.6666666666666665)
     expect(new_top.total_order).to eq(3.0)
-    expect(new_top.sibling_order).to eq(4.0)
   end
 
   it "difficult_move_to_child_of" do
     expect(users(:top_level).total_order).to eq(1.0)
-    expect(users(:top_level).sibling_order).to eq(2.0)
     expect(users(:child_2_1).total_order).to eq(1.7142857142857142)
-    expect(users(:child_2_1).sibling_order).to eq(1.7272727272727273)
 
     # create a new top-level node and move an entire top-level tree inside it.
     new_top = User.create(:name => 'New Top')
@@ -445,13 +435,11 @@ describe "User", :type => :model do
     expect(new_top.uuid).to eq(users(:top_level).parent_uuid)
 
     expect(users(:top_level).total_order).to eq(3.5)
-    expect(users(:top_level).sibling_order).to eq(3.6666666666666665)
     expect(users(:child_2_1).num).to eq(69)
     expect(users(:child_2_1).den).to eq(19)
     expect(users(:child_2_1).snum).to eq(109)
     expect(users(:child_2_1).sden).to eq(30)
     expect(users(:child_2_1).total_order).to eq(3.6315789473684212)
-    expect(users(:child_2_1).sibling_order).to eq(3.6333333333333333)
   end
 
   #rebuild swaps the position of the 2 children when added using move_to_child twice onto same parent
@@ -524,21 +512,15 @@ describe "User", :type => :model do
     root2.save!(:validate => false)
 
     output = User.roots.last.to_text
-    User.update_all('total_order = null, sibling_order = null')
+    User.update_all('total_order = null')
     User.rebuild!(false)
 
     expect(User.roots.last.to_text).to eq(output)
   end
 
-  it "valid_with_null_lefts" do
+  it "valid_with_null_total_order" do
     expect(User.valid?).to be_truthy
     User.update_all('total_order = null')
-    expect(User.valid?).to be_falsey
-  end
-
-  it "valid_with_null_rights" do
-    expect(User.valid?).to be_truthy
-    User.update_all('sibling_order = null')
     expect(User.valid?).to be_falsey
   end
 
@@ -797,14 +779,14 @@ describe "User", :type => :model do
       root = User.root
       users = root.self_and_descendants
       users = User.associate_parents users
-      expect(users[1].parent).to be users.first
+      expect(users[1].parent).to be(users.first)
     end
 
     it 'adds children on inverse of association' do
       root = User.root
       users = root.self_and_descendants
       users = User.associate_parents users
-      expect(users[0].children.first).to be users[1]
+      expect(users[0].children.first).to be(users[1])
     end
   end
 
@@ -829,7 +811,7 @@ describe "User", :type => :model do
       it 'raises an exception' do
         User.acts_as_nested_set_options[:dependent] = :restrict_with_exception
         root = User.root
-        expect { root.destroy! }.to raise_error  ActiveRecord::DeleteRestrictionError, 'Cannot delete record because of dependent children'
+        expect { root.destroy! }.to raise_error(ActiveRecord::DeleteRestrictionError, 'Cannot delete record because of dependent children')
       end
 
       it 'deletes the leaf' do

@@ -706,10 +706,10 @@ describe "RationalNestedSet" do
   end
 
   it "difficult_move_to_child_of" do
-    expect(categories(:top_level).left).to eq(1)
-    expect(categories(:top_level).right).to eq(10)
-    expect(categories(:child_2_1).left).to eq(5)
-    expect(categories(:child_2_1).right).to eq(6)
+    expect(categories(:top_level).total_order).to eq(1)
+    expect(categories(:top_level).sibling_order).to eq(2)
+    expect(categories(:child_2_1).total_order).to eq(1.7142857142857142)
+    expect(categories(:child_2_1).sibling_order).to eq(1.7272727272727273)
 
     # create a new top-level node and move an entire top-level tree inside it.
     new_top = Category.create(:name => 'New Top')

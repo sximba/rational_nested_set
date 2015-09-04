@@ -11,8 +11,11 @@ module CollectiveIdea
           # Returns the collection of all parents and self
           def self_and_ancestors
             nested_set_scope.
-            where((arel_table[total_order_column_name].lt(total_order).
-            and(arel_table[sibling_order_column_name].gteq(total_order))).or(arel_table[primary_column_name].eq(self.primary_id)))
+            where(
+            "(#{self.class.quoted_table_name}.#{self.class.quoted_total_order_column_name} < ?
+                and #{self.class.quoted_table_name}.#{self.class.quoted_snumv_column_name}/#{self.class.quoted_sdenv_column_name} >= ?) or
+                #{self.class.quoted_table_name}.#{self.class.quoted_primary_column_name} = ?", total_order, total_order, self.primary_id
+            )
           end
 
           # Returns the collection of all children of the parent, except self
@@ -45,24 +48,24 @@ module CollectiveIdea
           def self_and_descendants
             # using _left_ for both sides here lets us benefit from an index on that column if one exists
             nested_set_scope.where(
-              arel_table[primary_column_name].eq(self.primary_id).or(arel_table[total_order_column_name].gteq(total_order)).
-              and(arel_table[total_order_column_name].lt(sibling_order)))
+            arel_table[primary_column_name].eq(self.primary_id).or(arel_table[total_order_column_name].gteq(total_order)).
+            and(arel_table[total_order_column_name].lt(snumv/denv)))
           end
 
           def is_descendant_of?(other)
-            within_node?(other, self) && same_scope?(other)
+            (other.total_order < total_order && (other.snumv/Float(other.sdenv)) > total_order) && same_scope?(other)
           end
 
           def is_or_is_descendant_of?(other)
-            (other == self || within_node?(other, self)) && same_scope?(other)
+            (other == self || is_descendant_of?(other))
           end
 
           def is_ancestor_of?(other)
-            within_node?(self, other) && same_scope?(other)
+            (total_order < other.total_order && other.total_order < (snumv / Float(sdenv))) && same_scope?(other)
           end
 
           def is_or_is_ancestor_of?(other)
-            (self == other || within_node?(self, other)) && same_scope?(other)
+            (self == other || is_ancestor_of?(other))
           end
 
           # Check if other model is in the same scope
@@ -98,7 +101,6 @@ module CollectiveIdea
 
           def compute_level
             node, nesting = determine_depth
-
             node == self ? ancestors.count : node.level + nesting
           end
 
@@ -109,10 +111,6 @@ module CollectiveIdea
             end if node.respond_to?(:association)
 
             [node, nesting]
-          end
-
-          def within_node?(node, within)
-            node.total_order < within.total_order && within.total_order < node.sibling_order
           end
 
         end

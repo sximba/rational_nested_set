@@ -31,8 +31,7 @@ module CollectiveIdea #:nodoc:
 
         private
 
-        delegate :total_order, :sibling_order, :total_order_column_name, :sibling_order_column_name,
-                 :quoted_total_order_column_name, :quoted_sibling_order_column_name,
+        delegate :total_order, :total_order_column_name, :quoted_total_order_column_name,
                  :quoted_parent_column_name, :parent_column_name, :nested_set_scope_without_default_scope,
                  :primary_column_name, :quoted_primary_column_name, :primary_id,
                  :to => :instance

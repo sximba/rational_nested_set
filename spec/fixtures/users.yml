@@ -7,7 +7,6 @@ top_level:
   snumv: 2
   sdenv: 1
   total_order: 1.0
-  sibling_order: 2.0
   is_leaf: false
 child_1:
   id: 2
@@ -19,7 +18,6 @@ child_1:
   snumv: 5
   sdenv: 3
   total_order: 1.5
-  sibling_order: 1.6666666666666667
   is_leaf: true
 child_2:
   id: 3
@@ -31,7 +29,6 @@ child_2:
   snumv: 7
   sdenv: 4
   total_order: 1.6666666666666667
-  sibling_order: 1.75
   is_leaf: false
 child_2_1:
   id: 4
@@ -43,7 +40,6 @@ child_2_1:
   snumv: 19
   sdenv: 11
   total_order: 1.7142857142857142
-  sibling_order: 1.7272727272727273
   is_leaf: true
 child_3:
   id: 5
@@ -55,7 +51,6 @@ child_3:
   snumv: 9
   sdenv: 5
   total_order: 1.75
-  sibling_order: 1.8
   is_leaf: true
 top_level_2:
   id: 6
@@ -66,5 +61,4 @@ top_level_2:
   snumv: 3
   sdenv: 1
   total_order: 2.0
-  sibling_order: 3.0
   is_leaf: true

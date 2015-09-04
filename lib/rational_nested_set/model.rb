@@ -132,11 +132,6 @@ module CollectiveIdea #:nodoc:
           target[total_order_column_name]
         end
 
-        # returns the sibling_order column
-        def sibling_order(target = self)
-          target[sibling_order_column_name]
-        end
-
         # Returns true if this is a root node.
         def root?
           denv == 1
@@ -294,7 +289,6 @@ module CollectiveIdea #:nodoc:
             self[sdenv_column_name] = 1
             self[depth_column_name] = 0
             self[total_order_column_name] = 1
-            self[sibling_order_column_name] = 2
           else
             self[numv_column_name] = rmn.snumv
             self[denv_column_name] = 1
@@ -302,7 +296,6 @@ module CollectiveIdea #:nodoc:
             self[sdenv_column_name] = 1
             self[depth_column_name] = 0
             self[total_order_column_name] = rmn.snumv
-            self[sibling_order_column_name] = rmn.snumv + 1
           end
         end
 
