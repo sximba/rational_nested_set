@@ -13,8 +13,8 @@ module CollectiveIdea
             nested_set_scope.
             where(
             "(#{self.class.quoted_table_name}.#{self.class.quoted_total_order_column_name} < ?
-                and #{self.class.quoted_table_name}.#{self.class.quoted_snumv_column_name}/#{self.class.quoted_sdenv_column_name} >= ?) or
-                #{self.class.quoted_table_name}.#{self.class.quoted_primary_column_name} = ?", total_order, total_order, self.primary_id
+                and ? < (#{self.class.quoted_table_name}.#{self.class.quoted_snumv_column_name}/#{self.class.quoted_table_name}.#{self.class.quoted_sdenv_column_name})) or
+                #{self.class.quoted_table_name}.#{self.class.quoted_primary_column_name} = ?", self.total_order, self.total_order, self.primary_id
             )
           end
 

@@ -287,14 +287,14 @@ module CollectiveIdea #:nodoc:
             self[denv_column_name] = 1 if self[denv_column_name].nil?
             self[snumv_column_name] = 2 if self[snumv_column_name].nil?
             self[sdenv_column_name] = 1
-            self[depth_column_name] = 0
+            self[depth_column_name] = 0 unless depth_column_name.nil?
             self[total_order_column_name] = 1
           else
             self[numv_column_name] = rmn.snumv
             self[denv_column_name] = 1
             self[snumv_column_name] = rmn.snumv + 1
             self[sdenv_column_name] = 1
-            self[depth_column_name] = 0
+            self[depth_column_name] = 0 unless depth_column_name.nil?
             self[total_order_column_name] = rmn.snumv
           end
         end

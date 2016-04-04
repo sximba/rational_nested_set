@@ -32,7 +32,6 @@ class RenamedColumns < ActiveRecord::Base
                      :sdenv_column => 'blue',
                      :depth_column => 'indigo',
                      :total_order_column => 'violet',
-                     :sibling_order_column => 'brown',
                      :is_leaf_column => 'purple'
 end
 

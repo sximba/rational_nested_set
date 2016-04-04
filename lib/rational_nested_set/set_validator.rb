@@ -49,7 +49,7 @@ module CollectiveIdea #:nodoc:
         end
 
         def bounds_outside_parent
-          arel_table[total_order_column_name].lteq(parent[total_order_column_name]).or(arel_table[sibling_order_column_name].gteq(parent[sibling_order_column_name]))
+          arel_table[total_order_column_name].lteq(parent[total_order_column_name]).or(arel_table[total_order_column_name].gteq(parent[snumv_column_name]/parent[sdenv_column_name]))
         end
 
       end

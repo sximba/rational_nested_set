@@ -155,12 +155,6 @@ describe "RationalNestedSet" do
       expect(Default.new.quoted_total_order_column_name).to eq(quoted)
     end
 
-    it "quoted_sibling_order_column_name" do
-      quoted = Default.connection.quote_column_name('sibling_order')
-      expect(Default.quoted_sibling_order_column_name).to eq(quoted)
-      expect(Default.new.quoted_sibling_order_column_name).to eq(quoted)
-    end
-
     it "quoted_order_column_name" do
       quoted = Default.connection.quote_column_name('total_order')
       expect(Default.quoted_order_column_name).to eq(quoted)
@@ -208,12 +202,6 @@ describe "RationalNestedSet" do
     it "total_order_column_protected_from_assignment" do
       expect {
         Category.new.total_order = 1
-      }.to raise_exception(ActiveRecord::ActiveRecordError)
-    end
-
-    it "sibling_order_column_protected_from_assignment" do
-      expect {
-        Category.new.sibling_order = 1
       }.to raise_exception(ActiveRecord::ActiveRecordError)
     end
 
@@ -707,9 +695,7 @@ describe "RationalNestedSet" do
 
   it "difficult_move_to_child_of" do
     expect(categories(:top_level).total_order).to eq(1)
-    expect(categories(:top_level).sibling_order).to eq(2)
     expect(categories(:child_2_1).total_order).to eq(1.7142857142857142)
-    expect(categories(:child_2_1).sibling_order).to eq(1.7272727272727273)
 
     # create a new top-level node and move an entire top-level tree inside it.
     new_top = Category.create(:name => 'New Top')
@@ -1184,17 +1170,14 @@ describe "RationalNestedSet" do
   end
 
   describe 'creating roots with a default scope ordering' do
-    it "assigns total_order and sibling_order correctly" do
+    it "assigns total_order correctly" do
       alpha = Order.create(:name => 'Alpha')
       gamma = Order.create(:name => 'Gamma')
       omega = Order.create(:name => 'Omega')
 
       expect(alpha.total_order).to eq(1)
-      expect(alpha.sibling_order).to eq(2)
       expect(gamma.total_order).to eq(2)
-      expect(gamma.sibling_order).to eq(3)
       expect(omega.total_order).to eq(3)
-      expect(omega.sibling_order).to eq(4)
     end
   end
 

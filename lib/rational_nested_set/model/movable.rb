@@ -9,8 +9,7 @@ module CollectiveIdea #:nodoc:
             self != target && # Can't target self
             same_scope?(target) && # can't be in different scopes
             # detect impossible move
-            within_bounds?(target.total_order, target.total_order) &&
-            within_bounds?(target.sibling_order, target.sibling_order)
+            within_bounds?(target)
           end
 
           # Shorthand method for finding the left sibling and moving to the left of it.
@@ -125,18 +124,14 @@ module CollectiveIdea #:nodoc:
             end
           end
 
-          def out_of_bounds?(left_bound, right_bound)
-            total_order < left_bound && sibling_order > right_bound
-          end
-
           def prevent_unpersisted_move
             if self.new_record?
               raise ActiveRecord::ActiveRecordError, "You cannot move a new node"
             end
           end
 
-          def within_bounds?(left_bound, right_bound)
-            !out_of_bounds?(left_bound, right_bound)
+          def within_bounds?(target)
+            target.total_order <= self.total_order or target.total_order >= self.snumv/ Float(self.sdenv)
           end
         end
       end
